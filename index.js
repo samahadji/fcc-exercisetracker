@@ -14,7 +14,7 @@ let userSchema = new mongoose.Schema({
   log: [{
     description: String,
     duration: Number,
-    date: Date
+    date: String
   }]
 })
 
@@ -123,13 +123,9 @@ const queryUsers = (options, select,  done) => {
   .sort({username: 'ascending'}) // or 'asc'
   .select(select)
   .exec((err, res) => {
-    if (err) { done(err, null); } else { done(null, res);}
+    if (err) { done(err, null); } else { done(null, res); }
   })
 };
-
-
-
-
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
