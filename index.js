@@ -96,9 +96,10 @@ app.get('/api/users/:_id/logs', (req, res) => {
   User.findById(req.params._id, (err, user) => {
     if (err) {res.json({error: err}) }
     else {
+      tempLog = user.log.slice();
       if (req.query.to && req.query.from){
         if (moment(req.query.from).isValid() && moment(req.query.to).isValid()) 
-          tempLog = user.log.filter(elem => moment(elem.date).isBetween(req.query.to, req.query.from))
+          tempLog = tempLog.filter(elem => moment(elem.date).isBetween(req.query.to, req.query.from))
       }
 
       if (req.query.limit && Number.isInteger(req.query.limit)){
