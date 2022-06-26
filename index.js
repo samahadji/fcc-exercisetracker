@@ -108,8 +108,8 @@ app.get('/api/users/:_id/logs', (req, res) => {
       let logCount = tempLog.length;
       res.json({
         username: user.username,
-        from:  req.query.from,
-        to: req.query.to,
+        from: moment(req.query.from).format('ddd MMM DD YYYY'),
+        to: moment(req.query.to).format('ddd MMM DD YYYY'),
         count: logCount,
         _id: user._id,
         log: [...tempLog]
