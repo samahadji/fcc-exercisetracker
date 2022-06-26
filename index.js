@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const moment = require('moment')
 let bodyParser = require('body-parser');
 const { response } = require('express');
+const { isModuleNamespaceObject } = require('util/types');
 require('dotenv').config()
 
 mongoose.connect(process.env.MONGO_URI);
@@ -91,18 +92,31 @@ app.post('/api/users/:_id/exercises', (req, res) => {
   })
 
 app.get('/api/users/:_id/logs', (req, res) => {
+
   User.findById(req.params._id, (err, user) => {
     if (err) {res.json({error: err}) }
     else {
-      let logCount = user.log.length;
+      if (req.query.to && req.query.from){
+        if (moment(req.query.from).isValid() && moment(req.query.to).isValid()) 
+          tempLog = user.log.filter(elem => moment(elem.date).isBetween(req.query.to, req.query.from))
+      }
+
+      if (req.query.limit && Number.isInteger(req.query.limit)){
+        tempLog = tempLog.slice(0, Number(req.query.limit))
+      }
+
+      let logCount = tempLog.length;
       res.json({
         username: user.username,
+        from:  req.query.from,
+        to: req.query.to,
         count: logCount,
         _id: user._id,
-        log: [...user.log]
+        log: [...tempLog]
       }) 
     }
   })
+
 });
 
 const createAndSaveUser = (user, done) => {
