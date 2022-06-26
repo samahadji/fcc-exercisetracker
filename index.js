@@ -99,7 +99,7 @@ app.get('/api/users/:_id/logs', (req, res) => {
       tempLog = user.log.slice();
       if (req.query.to && req.query.from){
         if (moment(req.query.from).isValid() && moment(req.query.to).isValid()) 
-          tempLog = tempLog.filter(elem => moment(elem.date).isBetween(req.query.to, req.query.from))
+          tempLog = tempLog.filter(elem => moment(elem.date).isSameOrBefore(req.query.to) && moment(elem.date).isSameOrAfter(req.query.from))
       }
 
       if (req.query.limit && Number.isInteger(req.query.limit)){
